@@ -1,6 +1,6 @@
 const STATUS_MAP = {
     shelf: {
-        color: '',
+        color: 'green',
         canReserve: true,
         canCheckout: true,
         canCheckIn: false,
@@ -25,34 +25,32 @@ const STATUS_MAP = {
     }
 };
 
-// Helper function to find elements by their ID
-function findById(id) {
-    return document.getElementById(id);
-}
-
-// Helper function to find elements by their class name
-function findByClass(className) {
-    return document.getElementsByClassName(className);
-}
-
-// Update the status and buttons for a given book element
-function updateBookStatus(bookElement) {
-    const statusElement = bookElement.querySelector('.status');
-    const reserveButton = bookElement.querySelector('.reserve');
-    const checkoutButton = bookElement.querySelector('.checkout');
-    const checkinButton = bookElement.querySelector('.checkin');
-
-    const status = STATUS_MAP[statusElement.textContent.trim()];
-    statusElement.style.color = status.color;
-    reserveButton.disabled = !status.canReserve;
-    checkoutButton.disabled = !status.canCheckout;
-    checkinButton.disabled = !status.canCheckIn;
-    reserveButton.style.color = 'black'; // Ensure the button color is black
-    checkoutButton.style.color = 'black'; // Ensure the button color is black
-    checkinButton.style.color = 'black'; // Ensure the button color is black
-}
-
-// Find all book elements and update their status and buttons
-const bookElements = findByClass('book');
-for (const bookElement of bookElements) {
-    updateBookStatus(bookElement);'
+document.addEventListener("DOMContentLoaded", function () {
+    const books = document.querySelectorAll("[id^='book']");
+  
+    books.forEach((book, index) => {
+      const status = book.querySelector(".status");
+      const reserveBtn = book.querySelector(".reserve");
+      const checkoutBtn = book.querySelector(".checkout");
+      const checkinBtn = book.querySelector(".checkin");
+  
+      const statusText = status.innerText.toLowerCase();
+      const statusConfig = STATUS_MAP[statusText];
+  
+      if (statusConfig) {
+        status.style.color = statusConfig.color; // Set the status text color
+  
+        reserveBtn.disabled = !statusConfig.canReserve;
+        checkoutBtn.disabled = !statusConfig.canCheckout;
+        checkinBtn.disabled = !statusConfig.canCheckIn;
+  
+        // Convert buttons to grayscale
+        reserveBtn.style.color = "black";
+        checkoutBtn.style.color = "black";
+        checkinBtn.style.color = "black";
+      } else {
+        // Handle cases when the status is not found in STATUS_MAP
+        console.error("Status not found in STATUS_MAP:", statusText);
+      }
+    });
+  });
